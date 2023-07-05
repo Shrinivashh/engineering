@@ -1,0 +1,33 @@
+%{
+#include<stdio.h>
+#include<string.h>
+int flag=0,i=0,j,k=0;
+char o[20][20],opar[20][20];
+%}
+%%
+[0-9]+{flag++;strcpy(o[i],yytext;i++;}
+[+*/-]{flag--;strcpy(opar[k],yytext);k++;}
+.;
+%%
+int yywrap()
+{
+return 1;
+}
+int main(int argc,char**argv[])
+{
+ printf("enter an arithmatic expession\n");
+ yylex();
+ if(flag!=1)
+ printf("invalid expression\n");
+ else
+ {
+ printf("valid expression\n");
+ printf("the operands are...\t");
+ for(j=0;j<i;j++)
+ printf("%S\t",o[j]);
+ printf("the operators are\t");
+ for(j=0;j<k;j++)
+ printf("%s\t",opar[j]);
+ printf("\n");
+ }
+}
