@@ -1,0 +1,93 @@
+%{
+	#include<stdio.h>
+	#include<stdlib.h>
+	int nc=0;
+%}
+%%
+"/*"[a-zA-Z0-9\t\n]*"*/" {nc++;}
+"//"[a-zA-Z0-9\t\n]*"*\n" {nc++;}
+ . ;
+%%
+int main(int argc, char * argv[])
+{
+	if(argc==2)
+	{
+		yyin=fopen(argv[1],"r");
+	}
+	else
+	{
+		printf("Enter the input:");
+		yyin=stdin:
+	}
+	yyout=fopen("output.c","w");
+	yylex();
+	printf("The number of comment lines:%d\n",nc);
+	fclose(yyin);
+	fclose(yyin);
+}
+int yywrap()
+{
+	return 1:
+]
+\\\\\6A END\\\\\\\
+%{
+	#include<stdio.h>
+	#include "y.tab.h"
+	extern int yylval;
+%}
+%%
+[\t] ;
+[+ | - | * | / | > | < ] {printf("The operatpr is:%s\n",yytext);return OP;}
+[0-9]+ {return DIGIT;}
+[int|char|float|bool|main|if|while|do|return|else] {printf("Keyword is:%s\n",yytext);return KEY;}
+[a-zA-Z][a-zA-Z0-9]* {printf("Identifiers is:%s\n",yytext);return ID;}
+. ;
+
+YACC PART
+%{
+	#include<stdio.h>
+	#include<stdlib.h>
+	int yylex();
+	int yyerror();
+	extern FILE*yyin;
+	int id=0,dig=0,key=0,op=0;
+%}
+%name parse
+%token DIGIT KEY OP ID
+%%
+input:input DIGIT{dig++;}
+	|input ID {id++;}
+	|input KEY{key++;}
+	|input OP{op++;}
+	| DIGIT{dig++;}
+	|ID {id++;}
+	|KEY{key++;}
+	|OP{op++;}
+;
+%%
+int main(int argc,char*argv[])
+{
+	if(argc==2)
+	{
+		yyin=fopen(argv[1],"r");
+	}
+	else
+	{
+		printf("Input file not found:");
+		exit(0);
+	}
+	yyparse();
+	printf("Numbers:%d\n",dig);
+	printf("Operators:%d\n",op);
+	printf("Identifiers:%d\n",id);
+	printf("Keyword:%d\n",key);
+}
+int yyerror()
+{
+	printf("Parse error:");
+	exit(0);
+}
+int yywrap()
+{
+	return 1;
+}
